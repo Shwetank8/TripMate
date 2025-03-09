@@ -1,16 +1,20 @@
+import useGeneratePDF from "../hooks/useGeneratePdf";
+import { Button } from "./ui/button";
+
 function InfoSection({ tripData }: { tripData: any }) {
     const destination = tripData?.userInput?.destination || "";
     const formattedDestination = destination.charAt(0).toUpperCase() + destination.slice(1);
 
     const travellerType = tripData?.userInput?.people || "default";
-    const travellerImages:Record<string, string> = {
+    const travellerImages: Record<string, string> = {
         "Just me": "/solo.jpg",
         "Couple": "/couple.jpg",
         "Family": "/family.jpeg",
-        "Family/Frineds": "/frnds.jpg",
+        "Family/Friends": "/frnds.jpg",
         "default": "/placeholder.png"
     };
 
+    const { generatePDF } = useGeneratePDF(tripData);
 
     return (
         <div>
@@ -36,6 +40,9 @@ function InfoSection({ tripData }: { tripData: any }) {
                         {tripData?.userInput?.people}
                     </h2>
                 </div>
+                <Button onClick={() => generatePDF()}>
+                    Download Trip PDF
+                </Button>
             </div>
         </div>
     );
