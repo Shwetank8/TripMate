@@ -1,3 +1,4 @@
+import { Download } from "lucide-react";
 import useGeneratePDF from "../hooks/useGeneratePdf";
 import { Button } from "./ui/button";
 
@@ -17,7 +18,7 @@ function InfoSection({ tripData }: { tripData: any }) {
     const { generatePDF } = useGeneratePDF(tripData);
 
     return (
-        <div>
+        <div className="bg-[#f9f9f9] dark:bg-gray-800 rounded-xl p-6 shadow-md transition-all">
             <div className="flex w-full h-[340px] overflow-hidden rounded-xl items-center justify-center">
                 <img
                     src={travellerImages[travellerType]}
@@ -29,20 +30,24 @@ function InfoSection({ tripData }: { tripData: any }) {
                 <h2 className="text-2xl font-bold">
                     {formattedDestination}
                 </h2>
-                <div className="flex gap-5">
-                    <h2 className="p-1 px-3 rounded-full bg-gray-200 text-gray-500 text-xs md:text-md">
+                <div className="flex gap-5 justify-between">
+                    <div className="flex gap-4" >
+                    <h2 className="py-2 px-3 rounded-full border-2 border-[#f56551] text-black dark:text-white text-sm md:text-md">
                         {tripData?.userInput?.days} days
                     </h2>
-                    <h2 className="p-1 px-3 rounded-full bg-gray-200 text-gray-500 text-xs md:text-md">
+                    <h2 className="py-2 px-3 rounded-full border-2 border-[#f56551] text-black dark:text-white text-sm md:text-md">
                         Budget: {tripData?.userInput?.budget}
                     </h2>
-                    <h2 className="p-1 px-3 rounded-full bg-gray-200 text-gray-500 text-xs md:text-md">
+                    <h2 className="py-2 px-3 rounded-full border-2 border-[#f56551] text-black dark:text-white text-sm md:text-md">
                         {tripData?.userInput?.people}
                     </h2>
+                    </div>
+                    <button onClick={() => generatePDF()} className="text-[#f56551] cursor-pointer flex gap-2">
+                        Download Trip PDF
+                        <Download/>
+                    </button>
                 </div>
-                <Button onClick={() => generatePDF()}>
-                    Download Trip PDF
-                </Button>
+
             </div>
 
             {/* Trip Overview Section */}

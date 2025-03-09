@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { ArrowRight, MapPin, Calendar, Sparkles } from "lucide-react"
 import { ThemeToggle } from "../components/theme-toggle"
-
+import LOGO from "../assets/logo.jpg"
 
 function Landing() {
   return (
@@ -9,9 +9,10 @@ function Landing() {
       {/* Header */}
       <header className="py-4 px-6 border-b dark:border-gray-800">
         <div className="container mx-auto flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold text-[#f56551]">
-            TravelAI
-          </Link>
+          <a href="/">
+          <img src={LOGO} className="h-7 sm:h-9"></img>
+          </a>
+
           <div className="flex items-center space-x-4">
             <ThemeToggle />
             <Link
