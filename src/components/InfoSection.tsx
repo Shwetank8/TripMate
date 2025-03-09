@@ -44,20 +44,17 @@ function InfoSection({ tripData }: { tripData: any }) {
                     Download Trip PDF
                 </Button>
             </div>
-          </div>
+
+            {/* Trip Overview Section */}
+            <div className="prose dark:prose-invert max-w-none">
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Trip Overview</h2>
+                <p className="text-gray-600 dark:text-gray-300">
+                    Explore the beautiful {formattedDestination} with this {tripData?.userInput?.days}-day itinerary designed for{" "}
+                    {tripData?.userInput?.people} with a {tripData?.userInput?.budget} budget.
+                </p>
+            </div>
         </div>
-  
-        <div className="prose dark:prose-invert max-w-none">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Trip Overview</h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            Explore the beautiful {formattedDestination} with this {tripData?.userInput?.days}-day itinerary designed for{" "}
-            {tripData?.userInput?.people} with a {tripData?.userInput?.budget} budget.
-          </p>
-        </div>
-      </div>
-    )
-  }
-  
-  export default InfoSection
-  
-  
+    );
+}
+
+export default InfoSection;
