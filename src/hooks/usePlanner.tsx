@@ -14,10 +14,11 @@ const usePlanner = () => {
         const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
         if (!apiKey) {
             setError("API Key is missing");
+            console.log(apiKey)
             return;
         }
 
-        // console.log("API Key:", apiKey); // Debugging step
+        console.log("API Key:", apiKey); // Debugging step
 
         const genAI = new GoogleGenerativeAI(apiKey);
   
