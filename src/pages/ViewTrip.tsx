@@ -7,12 +7,13 @@ import { db } from "../utils/firebaseConfig"
 import { doc, getDoc } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-// Import the useTheme hook
+import { ThemeToggle } from "../components/theme-toggle"
+import { useTheme } from "../components/theme-provider" // Import the useTheme hook
 
 function ViewTrip() {
   const { id } = useParams<{ id: any }>()
   const [trip, setTrip] = useState<any>({})
- // Get the current theme
+  const { theme } = useTheme() // Get the current theme
 
   useEffect(() => {
     getTripData()
@@ -34,9 +35,9 @@ function ViewTrip() {
   }
 
   return (
-    <div >
+    <div className={`${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"} min-h-screen py-6 md:px-20 lg:px-44 xl:px-56`}>
       <div className="flex justify-end mb-4">
-        
+        <ThemeToggle />
       </div>
       <InfoSection tripData={trip} />
       <Hotels tripData={trip} />
