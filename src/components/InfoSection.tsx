@@ -1,4 +1,4 @@
-import useGeneratePDF from "../hooks/useGeneratePdf";
+import useGeneratePDF from "../hooks/useGeneratePDF";
 import { Button } from "./ui/button";
 
 function InfoSection({ tripData }: { tripData: any }) {
@@ -7,10 +7,10 @@ function InfoSection({ tripData }: { tripData: any }) {
 
     const travellerType = tripData?.userInput?.people || "default";
     const travellerImages: Record<string, string> = {
-        "Just me": "/solo.jpg",
-        "Couple": "/couple.jpg",
-        "Family": "/family.jpeg",
-        "Family/Friends": "/frnds.jpg",
+        "Solo Adventure": "/solo.jpg",
+        "Romantic Getaway": "/couple.jpg",
+        "Family Fun": "/family.jpeg",
+        "Group Escape": "/frnds.jpg",
         "default": "/placeholder.png"
     };
 
@@ -44,20 +44,53 @@ function InfoSection({ tripData }: { tripData: any }) {
                     Download Trip PDF
                 </Button>
             </div>
-          </div>
+
+            {/* Trip Overview Section */}
+            <div className="prose dark:prose-invert max-w-none">
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Trip Overview</h2>
+                <p className="text-gray-600 dark:text-gray-300">
+                    Explore the beautiful {formattedDestination} with this {tripData?.userInput?.days}-day itinerary designed for{" "}
+                    {tripData?.userInput?.people} with a {tripData?.userInput?.budget} budget.
+                </p>
+                {/* Weather Overview Section */}
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white mt-2 mb-4">Weather Overview</h2>
+                <p className="text-gray-600 dark:text-gray-300">
+                    {tripData?.tripData?.weather?.weatherConditions}
+                </p>
+                {/* BEST TIME TO VISIT */}
+                <h3 className="text-md font-bold text-gray-800 dark:text-white mt-2 mb-4">
+                    Best Time to Visit:   
+                    <span className="text-gray-600 dark:text-gray-300">
+                           {tripData?.tripData?.weather?.bestTimeToVisit}
+                    </span> 
+                </h3>
+                {/* Visa Details */}
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Visa Overview</h2>
+                <p className="text-gray-600 dark:text-gray-300">
+                    Requirements: {tripData?.tripData?.visa?.visaRequirements}
+                </p>
+                <p className="mt-4">
+                     Process: {tripData?.tripData?.visa?.visaProcess}
+                </p>
+                <p className="mt-4">
+                    Documents Required: {tripData?.tripData?.visa?.documentsRequired}
+                </p>
+
+                {/* Transport */}
+
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mt-5 mb-4">Transport Options</h2>
+                <p> {tripData?.tripData?.transport?.modesOfTransport} </p>
+{/* 
+                Other Relevant Info */}
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mt-5 mb-4">Other Relevant Info</h2>
+                        <ol type="1">
+                            <li>Mobile Phone Connectivity: {tripData?.tripData?.simConnectivity?.simCardProviders}</li>
+                            <li className="mt-2">Packing suggestions: {tripData?.tripData?.packing?.packingSuggestions}</li>
+                            <li className="mt-2">{tripData?.tripData?.otherInformation?.importantInformation}</li>
+                        </ol>
+            </div>
         </div>
-  
-        <div className="prose dark:prose-invert max-w-none">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Trip Overview</h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            Explore the beautiful {formattedDestination} with this {tripData?.userInput?.days}-day itinerary designed for{" "}
-            {tripData?.userInput?.people} with a {tripData?.userInput?.budget} budget.
-          </p>
-        </div>
-      </div>
-    )
-  }
-  
-  export default InfoSection
-  
-  
+    );
+}
+
+export default InfoSection;

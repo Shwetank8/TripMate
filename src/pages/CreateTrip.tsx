@@ -15,7 +15,7 @@ function CreateTrip() {
   const { generateItinerary, saveTrip, loading, error, response } = usePlanner()
 
   const onSubmit = async (data: FormValues) => {
-    console.log(data)
+    // console.log(data)
     try {
       const { destination, days, budget, people } = data
       const itinerary = await generateItinerary(destination, days, budget, people)

@@ -1,5 +1,4 @@
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 
 export const useGeneratePDF = (jsonData: any) => {
   const generatePDF = () => {
@@ -9,7 +8,7 @@ export const useGeneratePDF = (jsonData: any) => {
     }
 
     const { tripData } = jsonData;
-    const { destination, groupSize, budget, itinerary, hotels } = tripData;
+    const { destination, groupSize, budget, itinerary, hotels, restaurants } = tripData;
 
     const doc = new jsPDF();
     doc.setFont("helvetica", "bold");
@@ -19,14 +18,13 @@ export const useGeneratePDF = (jsonData: any) => {
     doc.text(`Budget: ${budget}`, 10, 30);
     doc.text("Itinerary:", 10, 40);
 
-    let yPos = 50; // Start position for itinerary text
+    let yPos = 50;
 
-    // Ensure itinerary exists before looping
     if (Array.isArray(itinerary)) {
-      itinerary.forEach((day: any, index: number) => {
+      itinerary.forEach((day: any) => {
         doc.setFont("helvetica", "bold");
         doc.text(`Day ${day.day}:`, 10, yPos);
-        yPos += 8; // Move down for placesToVisit
+        yPos += 8;
 
         if (Array.isArray(day.placesToVisit) && day.placesToVisit.length > 0) {
           day.placesToVisit.forEach((place: any, placeIndex: number) => {
@@ -36,37 +34,58 @@ export const useGeneratePDF = (jsonData: any) => {
               15,
               yPos
             );
-            yPos += 6; // Move down for next entry
+            yPos += 6;
           });
         } else {
           doc.text("No places available", 15, yPos);
           yPos += 6;
         }
 
-        yPos += 4; // Extra spacing before the next day
+        yPos += 4;
       });
     } else {
       doc.text("No itinerary available", 15, yPos);
+      yPos += 6;
     }
 
-    // Add a new page for hotels if needed
     doc.addPage();
     doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
     doc.text("Hotels:", 10, 20);
+    yPos = 30;
 
     if (Array.isArray(hotels) && hotels.length > 0) {
-      autoTable(doc, {
-        startY: 30,
-        head: [["Name", "Location", "Price", "Rating"]],
-        body: hotels.map((hotel: any) => [
-          hotel.hotelName,
-          hotel.hotelLocation,
-          hotel.hotelPrice,
-          hotel.hotelRating,
-        ]),
+      hotels.forEach((hotel: any, index: number) => {
+        doc.setFont("helvetica", "normal");
+        doc.text(`${index + 1}. ${hotel.hotelName}`, 10, yPos);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Location: ${hotel.hotelLocation}`, 15, yPos + 6);
+        doc.text(`Price: ${hotel.hotelPrice}`, 15, yPos + 12);
+        doc.text(`Rating: ${hotel.hotelRating}`, 15, yPos + 18);
+        yPos += 30;
       });
     } else {
-      doc.text("No hotels available", 10, 40);
+      doc.text("No hotels available", 10, yPos);
+      yPos += 10;
+    }
+
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Recommended Restaurants:", 10, yPos);
+    yPos += 10;
+
+    if (Array.isArray(restaurants) && restaurants.length > 0) {
+      restaurants.forEach((restaurant: any, index: number) => {
+        doc.setFont("helvetica", "normal");
+        doc.text(`${index + 1}. ${restaurant.restaurantName}`, 10, yPos);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Location: ${restaurant.restaurantLocation}`, 15, yPos + 6);
+        doc.text(`Average Cost per Meal: ${restaurant.averageCostPerMeal}`, 15, yPos + 12);
+        doc.text(`Cuisine: ${restaurant.restaurantCuisine}`, 15, yPos + 18);
+        yPos += 30;
+      });
+    } else {
+      doc.text("No restaurants available", 10, yPos);
     }
 
     doc.save("TripPlan.pdf");
@@ -74,4 +93,5 @@ export const useGeneratePDF = (jsonData: any) => {
 
   return { generatePDF };
 };
-export default useGeneratePDF;  
+
+export default useGeneratePDF;

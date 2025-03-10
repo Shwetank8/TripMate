@@ -1,5 +1,3 @@
-
-
 import Itinerary from "../components/Itinerary"
 import Hotels from "../components/Hotels"
 import InfoSection from "../components/InfoSection"
@@ -9,6 +7,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { ThemeToggle } from "../components/theme-toggle"
 import { useTheme } from "../components/theme-provider" // Import the useTheme hook
+import Restaurants from "../components/Restaurants"
 
 function ViewTrip() {
   const { id } = useParams<{ id: any }>()
@@ -42,6 +41,7 @@ function ViewTrip() {
       <InfoSection tripData={trip} />
       <Hotels tripData={trip} />
       <Itinerary tripData={trip} />
+      <Restaurants tripData={trip} />
     </div>
   )
   

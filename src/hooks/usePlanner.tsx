@@ -14,11 +14,11 @@ const usePlanner = () => {
         const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
         if (!apiKey) {
             setError("API Key is missing");
-            console.log(apiKey)
+            // console.log(apiKey)
             return;
         }
 
-        console.log("API Key:", apiKey); // Debugging step
+        // console.log("API Key:", apiKey); // Debugging step
 
         const genAI = new GoogleGenerativeAI(apiKey);
   
@@ -35,8 +35,13 @@ const usePlanner = () => {
         };
   
         const prompt = `Provide a day-to-day itinerary for ${destination} for ${days} days. 
-                The budget is ${budget}, and the group includes ${people} people. Give multiple hotels that are centrally located.In the itinerary also include plans based on number of people, for example if it is a couple add romantic spots, if it is a solo traveller add clubs/bars, if it is a family add museums adventure parks etc.
-                Each day should have a minimum of 3 places to visit.
+                The budget is ${budget}, and the group includes ${people} people. Give multiple hotels that are centrally located.
+                In the itinerary also include plans based on number of people, for example if it is a couple add romantic spots, if it is a solo traveller add clubs/bars, if it is a family add museums adventure parks etc.
+                Each day should have a minimum of 3 places to visit. Also give top restaurants/cafes to visit with restaurant name,location,cuisine and average cost per meal, give a minimum of 3 restaurants per day.
+                Also include any visa restrictions if any and a brief about the visa process and the documents required. 
+                Add best modes of transport to get around the city with average price of each mode, packing suggestions based on weather conditions.
+                Tell me about the weather conditions and the best time to visit. Also add best modes of transport to get around the city.
+                Add currency information (value of local currency in USD,INR,EUR,GBP), SIM connectivity, add any other important information that a traveller should know.
                 Return the response in **valid JSON format** with the following **exact structure**:
 
                 {
@@ -52,6 +57,44 @@ const usePlanner = () => {
                     "hotelImage": "string (URL)",
                     "hotelRating": "string",
                     "hotelAmenities": "string",
+                    }
+                ],
+                "visa": {
+                    "visaRequirements": "string",   
+                    "visaProcess": "string",
+                    "documentsRequired": "string"
+                },
+                "transport": {
+                    "modesOfTransport": "string",
+                },
+                "packing": {
+                    "packingSuggestions": "string"
+                },
+                "currency": {
+                    "localCurrencyValue": {
+                    "USD": "string",
+                    "INR": "string",
+                    "EUR": "string",
+                    "GBP": "string"
+                    }
+                },
+                "simConnectivity": {
+                    "simCardProviders": "string",
+                    "simCardCost": "string",
+                },
+                "otherInformation": {
+                    "importantInformation": "string",
+        },
+                "weather": {
+                    "bestTimeToVisit": "string",
+                    "weatherConditions": "string"
+                },
+                "restaurants": [
+                    {
+                    "restaurantName": "string",
+                    "restaurantLocation": "string",
+                    "restaurantCuisine": "string",
+                    "averageCostPerMeal": "string"
                     }
                 ],
                 "itinerary": [
@@ -126,7 +169,7 @@ const usePlanner = () => {
                 createdAt: new Date().toString(), // Store timestamp
                 id: docID,
             });
-            console.log("Trip saved successfully!");
+            // console.log("Trip saved successfully!");
             setLoading(false);
             navigate(`/view-trip/${docID}`); // Redirect to the newly created trip
 
