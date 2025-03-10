@@ -1,6 +1,7 @@
-import { Download } from "lucide-react";
 import useGeneratePDF from "../hooks/useGeneratePDF";
 import { Button } from "./ui/button";
+import { Download, MapPin, Umbrella, StampIcon as Passport, Bus, Calendar, PersonStanding, Car, Phone, Luggage, Info } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 function InfoSection({ tripData }: { tripData: any }) {
     const destination = tripData?.userInput?.destination || "";
@@ -26,85 +27,134 @@ function InfoSection({ tripData }: { tripData: any }) {
                     className="w-auto h-full object-contain rounded-xl"
                 />
             </div>
-            <div className="my-5 flex flex-col gap-2 mt-5">
+            <div className="sm:mt-6 flex flex-col gap-2">
                 <h2 className="text-2xl font-bold">
                     {formattedDestination}
                 </h2>
-                <div className="flex gap-5 justify-between">
-                    <div className="flex gap-4" >
-                    <h2 className="py-2 px-3 rounded-full border-2 border-[#f56551] text-black dark:text-white text-sm md:text-md">
-                        {tripData?.userInput?.days} days
-                    </h2>
-                    <h2 className="py-2 px-3 rounded-full border-2 border-[#f56551] text-black dark:text-white text-sm md:text-md">
-                        Budget: {tripData?.userInput?.budget}
-                    </h2>
-                    <h2 className="py-2 px-3 rounded-full border-2 border-[#f56551] text-black dark:text-white text-sm md:text-md">
-                        {tripData?.userInput?.people}
-                    </h2>
+                <div className="flex flex-col sm:flex-row gap-5 justify-between items-start sm:items-center">
+                    <div className="flex flex-wrap gap-2">
+                        <div className=" px-3 py-1 sm:py-2 w-auto rounded-full flex items-center gap-2 border-2 border-[#f56551] text-black dark:text-white text-sm">
+                            <Calendar className="w-3.5 h-3.5 mr-1" />{tripData?.userInput?.days} days
+                        </div>
+                        <div className="px-3 py-1 sm:py-2 w-auto rounded-full flex items-center gap-2 border-2 border-[#f56551] text-black dark:text-white text-sm">
+                            <MapPin className="w-3.5 h-3.5 mr-1" />   Budget: {tripData?.userInput?.budget}
+                        </div>
+                        <div className="px-3 py-1 sm:py-2 w-auto rounded-full flex items-center gap-2 border-2 border-[#f56551] text-black dark:text-white text-sm">
+                            <Car className="w-3.5 h-3.5 mr-1" />{tripData?.userInput?.people}
+                        </div>
                     </div>
-                    <button onClick={() => generatePDF()} className="text-[#f56551] cursor-pointer flex gap-2">
+                    <button
+                        onClick={() => generatePDF()}
+                        className="text-[#f56551] cursor-pointer flex gap-2 items-center mt-3 sm:mt-0"
+                    >
                         Download Trip PDF
-                        <Download/>
+                        <Download />
                     </button>
                 </div>
 
+
             </div>
 
-            {/* Trip Overview Section */}
-            <div className="prose dark:prose-invert max-w-none">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Trip Overview</h2>
-                <p className="text-gray-600 dark:text-gray-300">
-                    Explore the beautiful {formattedDestination} with this {tripData?.userInput?.days}-day itinerary designed for{" "}
-                    {tripData?.userInput?.people} with a {tripData?.userInput?.budget} budget.
-                </p>
-            </div>
 
-            {/* Trip Overview Section */}
-            <div className="prose dark:prose-invert max-w-none">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Trip Overview</h2>
-                <p className="text-gray-600 dark:text-gray-300">
-                    Explore the beautiful {formattedDestination} with this {tripData?.userInput?.days}-day itinerary designed for{" "}
-                    {tripData?.userInput?.people} with a {tripData?.userInput?.budget} budget.
-                </p>
+
+            <div className="prose dark:prose-invert max-w-none mt-6 space-y-4 items-center grid">
+                {/* Trip Overview Section */}
+                <Card className="bg-[#fff] dark:bg-gray-700  border-0">
+                    <CardHeader>
+                        <CardTitle className="text-2xl font-bold flex items-center ">
+                            <MapPin className="w-5 h-5 mr-2 text-rose-400" />
+                            Trip Overview
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-gray-600 dark:text-gray-300">
+                            Explore the beautiful {formattedDestination} with this {tripData?.userInput?.days}-day itinerary designed for{" "}
+                            {tripData?.userInput?.people} with a {tripData?.userInput?.budget} budget.
+                        </p>
+                    </CardContent>
+                </Card>
                 {/* Weather Overview Section */}
-                <h2 className="text-xl font-bold text-gray-800 dark:text-white mt-2 mb-4">Weather Overview</h2>
-                <p className="text-gray-600 dark:text-gray-300">
-                    {tripData?.tripData?.weather?.weatherConditions}
-                </p>
-                {/* BEST TIME TO VISIT */}
-                <h3 className="text-md font-bold text-gray-800 dark:text-white mt-2 mb-4">
-                    Best Time to Visit:   
-                    <span className="text-gray-600 dark:text-gray-300">
-                           {tripData?.tripData?.weather?.bestTimeToVisit}
-                    </span> 
-                </h3>
+                <Card className="bg-[#fff] dark:bg-gray-700  border-0 ">
+                    <CardHeader>
+                        <CardTitle className="text-2xl font-bold flex items-center ">
+                            <Umbrella className="w-5 h-5 mr-2 text-rose-400" />
+                            Weather Overview
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-gray-600 dark:text-gray-300">
+                            {tripData?.tripData?.weather?.weatherConditions}
+                        </p>
+                        <h3 className="text-md font-bold text-gray-800 dark:text-white mt-2 mb-4">
+                            Best Time to Visit:
+                            <span className="text-gray-600 dark:text-gray-300">
+                                {tripData?.tripData?.weather?.bestTimeToVisit}
+                            </span>
+                        </h3>
+                    </CardContent>
+                </Card>
                 {/* Visa Details */}
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Visa Overview</h2>
-                <p className="text-gray-600 dark:text-gray-300">
-                    Requirements: {tripData?.tripData?.visa?.visaRequirements}
-                </p>
-                <p className="mt-4">
-                     Process: {tripData?.tripData?.visa?.visaProcess}
-                </p>
-                <p className="mt-4">
-                    Documents Required: {tripData?.tripData?.visa?.documentsRequired}
-                </p>
+                <Card className="bg-[#fff] dark:bg-gray-700  border-0 ">
+                    <CardHeader>
+                        <CardTitle className="text-2xl font-bold flex items-center ">
+                            <Passport className="w-5 h-5 mr-2 text-rose-400" />
+                            Visa Overview
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-gray-600 dark:text-gray-300">
+                            Requirements: {tripData?.tripData?.visa?.visaRequirements}
+                        </p>
+                        <p className="mt-4">
+                            Process: {tripData?.tripData?.visa?.visaProcess}
+                        </p>
+                        <p className="mt-4">
+                            Documents Required: {tripData?.tripData?.visa?.documentsRequired}
+                        </p>
+                    </CardContent>
+                </Card>
 
                 {/* Transport */}
-
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mt-5 mb-4">Transport Options</h2>
-                <p> {tripData?.tripData?.transport?.modesOfTransport} </p>
-{/* 
-                Other Relevant Info */}
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mt-5 mb-4">Other Relevant Info</h2>
-                        <ul>
-                            <li>Mobile Phone Connectivity: {tripData?.tripData?.simConnectivity?.simCardProviders}</li>
-                            <li className="mt-2">Packing suggestions: {tripData?.tripData?.packing?.packingSuggestions}</li>
-                            <li className="mt-2">{tripData?.tripData?.otherInformation?.importantInformation}</li>
+                <Card className="bg-[#fff] dark:bg-gray-700  border-0 ">
+                    <CardHeader>
+                        <CardTitle className="text-2xl font-bold flex items-center ">
+                            <Bus className="w-5 h-5 mr-2 text-rose-400" />
+                            Transport Options
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-gray-600 dark:text-gray-300">
+                            Requirements: {tripData?.tripData?.visa?.visaRequirements}
+                        </p>
+                        <p className="mt-4">
+                            Process: {tripData?.tripData?.visa?.visaProcess}
+                        </p>
+                        <p className="mt-4">
+                            Documents Required: {tripData?.tripData?.visa?.documentsRequired}
+                        </p>
+                    </CardContent>
+                </Card>
+                {/* Other Relevant Info */}
+                <Card className="bg-[#fff] dark:bg-gray-700  border-0 ">
+                    <CardHeader>
+                        <CardTitle className="text-2xl font-bold flex items-center ">
+                            <PersonStanding className="w-5 h-5 mr-2 text-rose-400" />
+                            Other Relevant Info
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <ul className=" sm:space-y-5 list-disc list-inside">
+                            <li className="mt-2 flex gap-6"> <Phone className="hidden sm:size-4 sm:flex"/> Mobile Phone Connectivity: {tripData?.tripData?.simConnectivity?.simCardProviders}</li>
+                            <li className="mt-2 flex gap-6"> <Luggage className="hidden sm:size-7 sm:flex"/> Packing suggestions: {tripData?.tripData?.packing?.packingSuggestions}</li>
+                            <li className="mt-2 flex gap-6"> <Info className="hidden sm:size-4 sm:flex"/>  {tripData?.tripData?.otherInformation?.importantInformation}</li>
                         </ul>
+                    </CardContent>
+                </Card>
             </div>
+
         </div>
     );
 }
 
 export default InfoSection;
+
