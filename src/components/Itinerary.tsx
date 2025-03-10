@@ -2,7 +2,7 @@ import ItineraryCard from "./ItineraryCard"
 
 function Itinerary({ tripData }: { tripData: any }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md mt-8 transition-all">
+    <div className="bg-[#f9f9f9] dark:bg-gray-800 rounded-xl p-6 shadow-md mt-8 transition-all">
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
         <span className="w-8 h-8 bg-[#f56551] rounded-full mr-3 flex items-center justify-center text-white">
           <svg

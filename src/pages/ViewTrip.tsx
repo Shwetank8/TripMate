@@ -35,6 +35,9 @@ function ViewTrip() {
 
   return (
     <div className={`${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"} min-h-screen py-6 md:px-20 lg:px-44 xl:px-56`}>
+      <a href="/" className="flex justify-center w">
+          <img src="/logo.jpg" className="h-7 sm:h-9"></img>
+          </a>
       <div className="flex justify-end mb-4">
         <ThemeToggle />
       </div>
