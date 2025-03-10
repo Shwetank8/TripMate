@@ -8,84 +8,268 @@ export const useGeneratePDF = (jsonData: any) => {
     }
 
     const { tripData } = jsonData;
-    const { destination, groupSize, budget, itinerary, hotels, restaurants } = tripData;
+    const {
+      destination, days, budget, groupSize, hotels, restaurants,
+      itinerary, visa, transport, packing, currency,
+      simConnectivity, otherInformation, weather
+    } = tripData;
 
     const doc = new jsPDF();
+    let yPos = 20; // Start with more margin at top
+    const lineSpacing = 8;
+    const sectionSpacing = 12;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 10;
+    const textWidth = pageWidth - (margin * 2);
+
+    // Helper function to add text with word wrapping
+    const addWrappedText = (text: string, x: number, y: number, indent: number = 0) => {
+      const splitText = doc.splitTextToSize(text, textWidth - indent);
+      doc.text(splitText, x + indent, y);
+      return splitText.length * lineSpacing; // Return the height used
+    };
+
+    // Helper function to check if we need a new page
+    const checkPageBreak = (neededSpace: number) => {
+      const pageHeight = doc.internal.pageSize.getHeight();
+      if (yPos + neededSpace > pageHeight - margin) {
+        doc.addPage();
+        yPos = 20; // Reset position on new page
+        return true;
+      }
+      return false;
+    };
+
+    // Helper function to add a section title
+    const addSection = (title: string) => {
+      checkPageBreak(sectionSpacing * 2);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.text(title, margin, yPos);
+      yPos += sectionSpacing;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(12);
+    };
+
+    // Title
     doc.setFont("helvetica", "bold");
-    doc.text(`Trip Plan: ${destination}`, 10, 10);
+    doc.setFontSize(18);
+    doc.text(`Trip Plan: ${destination}`, margin, yPos);
+    yPos += 16;
+
+    // Basic Trip Details
     doc.setFontSize(12);
-    doc.text(`Group Size: ${groupSize}`, 10, 20);
-    doc.text(`Budget: ${budget}`, 10, 30);
-    doc.text("Itinerary:", 10, 40);
+    doc.setFont("helvetica", "normal");
+    
+    yPos += addWrappedText(`Duration: ${days} days`, margin, yPos);
+    yPos += lineSpacing;
+    
+    yPos += addWrappedText(`Budget: ${budget}`, margin, yPos);
+    yPos += lineSpacing;
+    
+    yPos += addWrappedText(`Group Size: ${groupSize}`, margin, yPos);
+    yPos += sectionSpacing;
 
-    let yPos = 50;
+    // Visa Information
+    addSection("Visa Information");
+    
+    yPos += addWrappedText(`Requirements: ${visa.visaRequirements}`, margin, yPos);
+    yPos += lineSpacing;
+    
+    yPos += addWrappedText(`Process: ${visa.visaProcess}`, margin, yPos);
+    yPos += lineSpacing;
+    
+    yPos += addWrappedText(`Documents Required: ${visa.documentsRequired}`, margin, yPos);
+    yPos += sectionSpacing;
 
-    if (Array.isArray(itinerary)) {
+    // Transport
+    addSection("Transport Information");
+    yPos += addWrappedText(transport.modesOfTransport, margin, yPos);
+    yPos += sectionSpacing;
+
+    // Packing
+    addSection("Packing Suggestions");
+    yPos += addWrappedText(packing.packingSuggestions, margin, yPos);
+    yPos += sectionSpacing;
+
+    // Currency Exchange
+    addSection("Currency Exchange Rates");
+    
+    if (currency && currency.localCurrencyValue) {
+      Object.entries(currency.localCurrencyValue).forEach(([key, value], index) => {
+        const currencyText = `${index + 1}. ${key}: ${value}`;
+        checkPageBreak(lineSpacing);
+        yPos += addWrappedText(currencyText, margin, yPos);
+      });
+    } else {
+      yPos += addWrappedText("No currency information available", margin, yPos);
+    }
+    yPos += sectionSpacing;
+
+    // SIM Connectivity
+    addSection("SIM Connectivity");
+    
+    if (simConnectivity) {
+      yPos += addWrappedText(`Providers: ${simConnectivity.simCardProviders}`, margin, yPos);
+      yPos += lineSpacing;
+      
+      yPos += addWrappedText(`Cost: ${simConnectivity.simCardCost}`, margin, yPos);
+    } else {
+      yPos += addWrappedText("No SIM connectivity information available", margin, yPos);
+    }
+    yPos += sectionSpacing;
+
+    // Other Important Information
+    addSection("Other Important Information");
+    
+    if (otherInformation && otherInformation.importantInformation) {
+      yPos += addWrappedText(otherInformation.importantInformation, margin, yPos);
+    } else {
+      yPos += addWrappedText("No additional information available", margin, yPos);
+    }
+    yPos += sectionSpacing;
+
+    // Weather Information
+    addSection("Weather Information");
+    
+    if (weather) {
+      yPos += addWrappedText(`Best Time to Visit: ${weather.bestTimeToVisit}`, margin, yPos);
+      yPos += lineSpacing;
+      
+      yPos += addWrappedText(`Weather Conditions: ${weather.weatherConditions}`, margin, yPos);
+    } else {
+      yPos += addWrappedText("No weather information available", margin, yPos);
+    }
+    yPos += sectionSpacing;
+
+    // Itinerary - Start on a new page
+    doc.addPage();
+    yPos = 20;
+
+    // Itinerary
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("Itinerary", margin, yPos);
+    yPos += 12;
+    doc.setFontSize(12);
+
+    if (Array.isArray(itinerary) && itinerary.length > 0) {
       itinerary.forEach((day: any) => {
+        checkPageBreak(sectionSpacing * 2);
+        
         doc.setFont("helvetica", "bold");
-        doc.text(`Day ${day.day}:`, 10, yPos);
-        yPos += 8;
+        doc.text(`Day ${day.day}: ${day.date || ""}`, margin, yPos);
+        yPos += lineSpacing + 2;
+        doc.setFont("helvetica", "normal");
 
         if (Array.isArray(day.placesToVisit) && day.placesToVisit.length > 0) {
-          day.placesToVisit.forEach((place: any, placeIndex: number) => {
-            doc.setFont("helvetica", "normal");
-            doc.text(
-              `${placeIndex + 1}. ${place.placeName} - ${place.placeDescription} (${place.openingTime || "N/A"})`,
-              15,
-              yPos
-            );
-            yPos += 6;
+          day.placesToVisit.forEach((place: any, index: number) => {
+            checkPageBreak(sectionSpacing * 3);
+            
+            const placeText = `${index + 1}. ${place.placeName} ${place.placeDescription ? `- ${place.placeDescription}` : ""}`;
+            yPos += addWrappedText(placeText, margin, yPos, 0);
+            yPos += lineSpacing;
+            
+            if (place.placeLocation) {
+              yPos += addWrappedText(`Location: ${place.placeLocation}`, margin, yPos, 5);
+              yPos += lineSpacing;
+            }
+            
+            if (place.openingTime) {
+              yPos += addWrappedText(`Opening Time: ${place.openingTime}`, margin, yPos, 5);
+              yPos += lineSpacing;
+            }
+            
+            yPos += 4; // Add a bit of space between places
           });
         } else {
-          doc.text("No places available", 15, yPos);
-          yPos += 6;
+          yPos += addWrappedText("No places scheduled for this day", margin, yPos, 5);
         }
-
-        yPos += 4;
+        yPos += sectionSpacing; // Space between days
       });
     } else {
-      doc.text("No itinerary available", 15, yPos);
-      yPos += 6;
+      yPos += addWrappedText("No itinerary available", margin, yPos);
     }
+    yPos += sectionSpacing;
 
-    doc.addPage();
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "bold");
-    doc.text("Hotels:", 10, 20);
-    yPos = 30;
-
+    // Hotels
+    checkPageBreak(sectionSpacing * 2);
+    addSection("Hotels");
+    
     if (Array.isArray(hotels) && hotels.length > 0) {
-      hotels.forEach((hotel: any, index: number) => {
+      hotels.forEach((hotel, index) => {
+        checkPageBreak(sectionSpacing * 3);
+        
+        doc.setFont("helvetica", "bold");
+        yPos += addWrappedText(`${index + 1}. ${hotel.hotelName}`, margin, yPos);
+        yPos += lineSpacing;
         doc.setFont("helvetica", "normal");
-        doc.text(`${index + 1}. ${hotel.hotelName}`, 10, yPos);
-        doc.setFont("helvetica", "normal");
-        doc.text(`Location: ${hotel.hotelLocation}`, 15, yPos + 6);
-        doc.text(`Price: ${hotel.hotelPrice}`, 15, yPos + 12);
-        doc.text(`Rating: ${hotel.hotelRating}`, 15, yPos + 18);
-        yPos += 30;
+        
+        if (hotel.hotelLocation) {
+          yPos += addWrappedText(`Location: ${hotel.hotelLocation}`, margin, yPos, 5);
+          yPos += lineSpacing;
+        }
+        
+        if (hotel.hotelPrice) {
+          yPos += addWrappedText(`Price: ${hotel.hotelPrice}`, margin, yPos, 5);
+          yPos += lineSpacing;
+        }
+        
+        if (hotel.hotelRating) {
+          yPos += addWrappedText(`Rating: ${hotel.hotelRating}`, margin, yPos, 5);
+          yPos += lineSpacing;
+        }
+        
+        if (hotel.hotelAmenities) {
+          yPos += addWrappedText(`Amenities: ${hotel.hotelAmenities}`, margin, yPos, 5);
+        }
+        
+        yPos += sectionSpacing; // Space between hotels
       });
     } else {
-      doc.text("No hotels available", 10, yPos);
-      yPos += 10;
+      yPos += addWrappedText("No hotels available", margin, yPos);
+    }
+    yPos += sectionSpacing;
+
+    // Restaurants
+    checkPageBreak(sectionSpacing * 2);
+    addSection("Recommended Restaurants");
+    
+    if (Array.isArray(restaurants) && restaurants.length > 0) {
+      restaurants.forEach((restaurant, index) => {
+        checkPageBreak(sectionSpacing * 3);
+        
+        doc.setFont("helvetica", "bold");
+        yPos += addWrappedText(`${index + 1}. ${restaurant.restaurantName}`, margin, yPos);
+        yPos += lineSpacing;
+        doc.setFont("helvetica", "normal");
+        
+        if (restaurant.restaurantLocation) {
+          yPos += addWrappedText(`Location: ${restaurant.restaurantLocation}`, margin, yPos, 5);
+          yPos += lineSpacing;
+        }
+        
+        if (restaurant.restaurantCuisine) {
+          yPos += addWrappedText(`Cuisine: ${restaurant.restaurantCuisine}`, margin, yPos, 5);
+          yPos += lineSpacing;
+        }
+        
+        if (restaurant.averageCostPerMeal) {
+          yPos += addWrappedText(`Average Cost per Meal: ${restaurant.averageCostPerMeal}`, margin, yPos, 5);
+        }
+        
+        yPos += sectionSpacing; // Space between restaurants
+      });
+    } else {
+      yPos += addWrappedText("No restaurants available", margin, yPos);
     }
 
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "bold");
-    doc.text("Recommended Restaurants:", 10, yPos);
-    yPos += 10;
-
-    if (Array.isArray(restaurants) && restaurants.length > 0) {
-      restaurants.forEach((restaurant: any, index: number) => {
-        doc.setFont("helvetica", "normal");
-        doc.text(`${index + 1}. ${restaurant.restaurantName}`, 10, yPos);
-        doc.setFont("helvetica", "normal");
-        doc.text(`Location: ${restaurant.restaurantLocation}`, 15, yPos + 6);
-        doc.text(`Average Cost per Meal: ${restaurant.averageCostPerMeal}`, 15, yPos + 12);
-        doc.text(`Cuisine: ${restaurant.restaurantCuisine}`, 15, yPos + 18);
-        yPos += 30;
-      });
-    } else {
-      doc.text("No restaurants available", 10, yPos);
+    // Add page numbers
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(10);
+      doc.text(`Page ${i} of ${pageCount}`, pageWidth - 30, doc.internal.pageSize.getHeight() - 10);
     }
 
     doc.save("TripPlan.pdf");
