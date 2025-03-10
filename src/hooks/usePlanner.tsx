@@ -35,7 +35,7 @@ const usePlanner = () => {
         };
   
         const prompt = `Provide a day-to-day itinerary for ${destination} for ${days} days. 
-                The budget is ${budget}, and the group includes ${people} people. Give multiple hotels that are centrally located.
+                The budget is ${budget}, and the group includes ${people} people. Give multiple hotels that are centrally located. hotel price should be of type 2000-3000 etc, same with restaurant avergae cost per meal.
                 In the itinerary also include plans based on number of people, for example if it is a couple add romantic spots, if it is a solo traveller add clubs/bars, if it is a family add museums adventure parks etc.
                 Each day should have a minimum of 3 places to visit. Also give top restaurants/cafes to visit with restaurant name,location,cuisine and average cost per meal, give a minimum of 3 restaurants per day.
                 Also include any visa restrictions if any and a brief about the visa process and the documents required. 
