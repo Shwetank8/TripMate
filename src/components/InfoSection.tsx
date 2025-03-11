@@ -1,5 +1,4 @@
 import useGeneratePDF from "../hooks/useGeneratePDF";
-import { Button } from "./ui/button";
 import { Download, MapPin, Umbrella, StampIcon as Passport, Bus, Calendar, PersonStanding, Car, Phone, Luggage, Info } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 

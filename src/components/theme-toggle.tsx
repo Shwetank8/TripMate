@@ -1,4 +1,4 @@
-"use client"
+
 import { useTheme } from "./theme-provider"
 import { Moon, Sun } from "lucide-react"
 
