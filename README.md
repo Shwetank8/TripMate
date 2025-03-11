@@ -7,7 +7,7 @@ TripMate is a smart trip itinerary generator powered by the Gemini API. Built us
 - Dynamic UI: Styled with Tailwind CSS and ShadCN for a clean and responsive interface.
 - Real-time Database: Firebase Firestore for storing user preferences and generated itineraries.
 
-  ## Tech Stack
+## Tech Stack
   - Frontend: React, TypeScript, Tailwind CSS, ShadCN
   - Backend: Firebase (Firestore)
   - AI Integration: Gemini API
